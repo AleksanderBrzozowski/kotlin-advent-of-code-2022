@@ -1,17 +1,19 @@
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
-    }
+    val testInput = elves("Day01_test")
+    println(testInput.maxBy { it.calories.sum() }.calories.sum())
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
-
-    val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+    val input = elves("Day01")
+    val (first, second, third) = input.map { it.calories.sum() }.sortedByDescending { it }
+    println(first + second + third)
 }
+
+private data class Elf(val calories: List<Int>)
+
+private fun elves(name: String): List<Elf> = readInput(name)
+    .fold(listOf(Elf(calories = emptyList()))) { elves, input ->
+        if (input == "") {
+            return@fold elves + Elf(calories = emptyList())
+        }
+        val currentElf = elves.last()
+        elves.replaceLast(currentElf.copy(calories = currentElf.calories + input.toInt()))
+    }
