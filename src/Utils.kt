@@ -16,3 +16,8 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
     .padStart(32, '0')
 
 fun <T> List<T>.replaceLast(value: T): List<T> = dropLast(1) + value
+
+fun <T> List<T>.replaceLast(block: (T) -> T): List<T> {
+    val last = last()
+    return dropLast(1) + block(last)
+}
